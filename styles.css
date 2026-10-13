@@ -1,8 +1,15 @@
 :root {
   color-scheme: light;
-  --bg: #f5f5f2; --panel: #fff; --ink: #20231f; --muted: #858981;
-  --line: #e8e9e3; --accent: #536c59; --accent-dark: #3f5545;
-  --soft: #edf1eb; --danger: #b84242; --shadow: 0 24px 70px rgba(29,36,28,.08);
+  --bg: #f5f5f2;
+  --panel: #fff;
+  --ink: #20231f;
+  --muted: #858981;
+  --line: #e8e9e3;
+  --accent: #536c59;
+  --accent-dark: #3f5545;
+  --soft: #edf1eb;
+  --danger: #b84242;
+  --shadow: 0 24px 70px rgba(29,36,28,.08);
   font-family: "DM Sans", sans-serif;
 }
 * { box-sizing: border-box; }
