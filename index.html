@@ -21,7 +21,7 @@
       <p class="muted auth-copy">Enter your private access PIN to continue.</p>
       <form id="loginForm" class="auth-card">
         <label for="pin">Private PIN</label>
-        <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password" required minlength="6" maxlength="64" placeholder="Enter your PIN">
+        <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password" required minlength="4" maxlength="64" placeholder="Enter your PIN">
         <button class="primary-button" type="submit" id="loginButton">Unlock private space <span aria-hidden="true">↗</span></button>
         <p id="authError" class="error-text" role="alert" aria-live="polite"></p>
       </form>
@@ -44,7 +44,6 @@
           </button>
         </div>
       </header>
-
       <div id="notice" class="notice hidden" role="status" aria-live="polite"></div>
       <div class="retention-strip"><span class="retention-dot"></span> Messages expire automatically after 15 minutes</div>
       <div id="messageList" class="message-list" aria-live="polite" aria-label="Messages">
