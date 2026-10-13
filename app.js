@@ -3,6 +3,7 @@ const authView = document.querySelector("#authView");
 const chatView = document.querySelector("#chatView");
 const loginForm = document.querySelector("#loginForm");
 const loginButton = document.querySelector("#loginButton");
+const pinInput = document.querySelector("#pin");
 const authError = document.querySelector("#authError");
 const messageList = document.querySelector("#messageList");
 const emptyState = document.querySelector("#emptyState");
@@ -39,6 +40,7 @@ function showAuth() {
   authView.classList.remove("hidden");
   chatView.classList.add("hidden");
   authError.textContent = "";
+  pinInput.value = "";
 }
 function showChat() {
   authView.classList.add("hidden");
@@ -88,9 +90,7 @@ async function subscribeRealtime() {
   if (channel) await supabase.removeChannel(channel);
   channel = supabase.channel("private-chat-messages")
     .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, payload => {
-      if (currentUser && payload.new && new Date(payload.new.expires_at) > new Date()) {
-        renderMessage(payload.new);
-      }
+      if (currentUser && payload.new && new Date(payload.new.expires_at) > new Date()) renderMessage(payload.new);
     })
     .on("postgres_changes", { event: "DELETE", schema: "public", table: "messages" }, () => {
       loadMessages().catch(() => clearRenderedMessages());
@@ -131,14 +131,13 @@ async function leaveChat({ signOut = false } = {}) {
   showAuth();
 }
 function clearChatUIOnHide() {
-  // Best effort only: browsers do not guarantee lifecycle events on force-close.
   clearRenderedMessages();
 }
 async function initialize() {
   if (!cfg.SUPABASE_URL || !cfg.SUPABASE_ANON_KEY ||
       cfg.SUPABASE_URL.includes("YOUR_PROJECT_ID") ||
       cfg.SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")) {
-    authError.textContent = "Setup required: copy config.js.example to config.js and add your Supabase URL and public key.";
+    authError.textContent = "Setup required: add your Supabase URL and publishable key to config.js.";
     loginButton.disabled = true;
     return;
   }
@@ -148,13 +147,12 @@ async function initialize() {
     return;
   }
   supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
     realtime: { params: { eventsPerSecond: 5 } }
   });
   const { data: { session }, error } = await supabase.auth.getSession();
   if (error) console.error(error);
   if (session?.user) await enterChat(session.user);
-
   supabase.auth.onAuthStateChange((event, sessionNow) => {
     if (event === "SIGNED_OUT") {
       currentUser = null;
@@ -165,29 +163,37 @@ async function initialize() {
     }
   });
 }
+
 loginForm.addEventListener("submit", async event => {
   event.preventDefault();
   if (!supabase) return;
+  const pin = pinInput.value.trim();
+  if (pin.length < 6) {
+    authError.textContent = "Your PIN must be at least 6 characters.";
+    return;
+  }
   authError.textContent = "";
   loginButton.disabled = true;
-  loginButton.textContent = "Sending sign-in link…";
-  const email = document.querySelector("#email").value.trim();
+  loginButton.textContent = "Verifying PIN…";
   try {
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: {
-        emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
-        shouldCreateUser: false
-      }
-    });
+    const { data, error } = await supabase.functions.invoke("pin-login", { body: { pin } });
     if (error) throw error;
-    authError.textContent = "If this email belongs to an authorized account, a sign-in link has been sent. Check your inbox and spam folder.";
+    if (!data?.access_token || !data?.refresh_token) throw new Error("Login service returned no session.");
+    const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+      access_token: data.access_token,
+      refresh_token: data.refresh_token
+    });
+    if (sessionError) throw sessionError;
+    if (!sessionData.user) throw new Error("No authenticated user returned.");
+    pinInput.value = "";
+    await enterChat(sessionData.user);
   } catch (error) {
-    authError.textContent = "Could not send the sign-in link. Check your email and Supabase Auth settings, then try again.";
-    console.error("Passwordless sign-in failed:", error);
+    authError.textContent = "PIN not accepted or login service is not configured yet. Try again later.";
+    console.error("PIN login failed:", error);
   } finally {
     loginButton.disabled = false;
-    loginButton.innerHTML = 'Email me a sign-in link <span aria-hidden="true">↗</span>';
+    loginButton.innerHTML = 'Unlock private space <span aria-hidden="true">↗</span>';
+    pinInput.value = "";
   }
 });
 
