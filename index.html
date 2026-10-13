@@ -24,10 +24,33 @@
         <input id="email" name="email" type="email" autocomplete="username" required maxlength="254" placeholder="you@example.com">
         <label for="password">Password</label>
         <input id="password" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="Your password">
+        <button class="text-button" type="button" id="forgotPasswordButton">Forgot password?</button>
         <button class="primary-button" type="submit" id="loginButton">Continue <span aria-hidden="true">↗</span></button>
         <p id="authError" class="error-text" role="alert" aria-live="polite"></p>
       </form>
       <p class="tiny-note">Access is limited to authorized accounts.</p>
+    </section>
+
+    <section id="resetView" class="auth-view hidden" aria-labelledby="resetTitle">
+      <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="eyebrow">ACCOUNT RECOVERY</p>
+      <h1 id="resetTitle">Reset your<br>password.</h1>
+      <p class="muted auth-copy" id="resetDescription">Enter your account email and we'll send you a secure reset link.</p>
+      <form id="resetRequestForm" class="auth-card">
+        <label for="resetEmail">Email address</label>
+        <input id="resetEmail" name="resetEmail" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com">
+        <button class="primary-button" type="submit" id="sendResetButton">Send reset link <span aria-hidden="true">↗</span></button>
+        <p id="resetRequestMessage" class="error-text" role="status" aria-live="polite"></p>
+        <button class="text-button" type="button" id="backToLoginButton">Back to sign in</button>
+      </form>
+      <form id="resetPasswordForm" class="auth-card hidden">
+        <label for="newPassword">New password</label>
+        <input id="newPassword" name="newPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="At least 8 characters">
+        <label for="confirmPassword">Confirm new password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="Enter it again">
+        <button class="primary-button" type="submit" id="updatePasswordButton">Update password <span aria-hidden="true">↗</span></button>
+        <p id="resetPasswordMessage" class="error-text" role="alert" aria-live="polite"></p>
+      </form>
     </section>
 
     <section id="chatView" class="chat-view hidden" aria-label="Private messages">
