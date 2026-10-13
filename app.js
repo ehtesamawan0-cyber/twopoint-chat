@@ -58,6 +58,29 @@ function showChat() {
   authView.classList.add("hidden");
   chatView.classList.remove("hidden");
 }
+function showResetRequest() {
+  recoveryMode = false;
+  authView.classList.add("hidden");
+  chatView.classList.add("hidden");
+  resetView.classList.remove("hidden");
+  resetRequestForm.classList.remove("hidden");
+  resetPasswordForm.classList.add("hidden");
+  resetRequestMessage.textContent = "";
+  resetPasswordMessage.textContent = "";
+  resetDescription.textContent = "Enter your account email and we'll send you a secure reset link.";
+  resetEmail.value = document.querySelector("#email").value.trim();
+}
+function showResetPassword() {
+  recoveryMode = true;
+  authView.classList.add("hidden");
+  chatView.classList.add("hidden");
+  resetView.classList.remove("hidden");
+  resetRequestForm.classList.add("hidden");
+  resetPasswordForm.classList.remove("hidden");
+  resetRequestMessage.textContent = "";
+  resetPasswordMessage.textContent = "";
+  resetDescription.textContent = "Choose a new password for your account.";
+}
 function clearRenderedMessages() {
   messages = [];
   seenIds.clear();
