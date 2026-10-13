@@ -168,8 +168,8 @@ loginForm.addEventListener("submit", async event => {
   event.preventDefault();
   if (!supabase) return;
   const pin = pinInput.value.trim();
-  if (pin.length < 6) {
-    authError.textContent = "Your PIN must be at least 6 characters.";
+  if (pin.length < 4) {
+    authError.textContent = "Your PIN must be at least 4 characters.";
     return;
   }
   authError.textContent = "";
