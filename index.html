@@ -18,14 +18,14 @@
       <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
       <p class="eyebrow">A PRIVATE SPACE</p>
       <h1 id="authTitle">A little room<br>to talk.</h1>
-      <p class="muted auth-copy">Enter your email and we’ll send you a secure sign-in link. No password needed.</p>
+      <p class="muted auth-copy">Enter your private access PIN to continue.</p>
       <form id="loginForm" class="auth-card">
-        <label for="email">Email address</label>
-        <input id="email" name="email" type="email" autocomplete="username" required maxlength="254" placeholder="you@example.com">
-        <button class="primary-button" type="submit" id="loginButton">Email me a sign-in link <span aria-hidden="true">↗</span></button>
+        <label for="pin">Private PIN</label>
+        <input id="pin" name="pin" type="password" inputmode="numeric" autocomplete="current-password" required minlength="6" maxlength="64" placeholder="Enter your PIN">
+        <button class="primary-button" type="submit" id="loginButton">Unlock private space <span aria-hidden="true">↗</span></button>
         <p id="authError" class="error-text" role="alert" aria-live="polite"></p>
       </form>
-      <p class="tiny-note">Access is limited to authorized accounts.</p>
+      <p class="tiny-note">Access is limited to authorized people.</p>
     </section>
 
     <section id="chatView" class="chat-view hidden" aria-label="Private messages">
@@ -39,7 +39,7 @@
           <button id="clearButton" class="icon-button" type="button" aria-label="Clear conversation" title="Clear conversation">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-9 0 1 13h10l1-13M10 11v5m4-5v5"/></svg>
           </button>
-          <button id="logoutButton" class="icon-button" type="button" aria-label="Sign out" title="Sign out">
+          <button id="logoutButton" class="icon-button" type="button" aria-label="Lock and sign out" title="Lock and sign out">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5v16h5M14 8l4 4-4 4m4-4H9"/></svg>
           </button>
         </div>
